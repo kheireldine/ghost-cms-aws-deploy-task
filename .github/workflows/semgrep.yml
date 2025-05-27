@@ -1,23 +1,38 @@
-name: Semgrep SAST
+name: Semgrep
 
-on: [push, pull_request]
+on:
+  workflow_dispatch: {}
+  pull_request: {}
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - .github/workflows/semgrep.yml
+  schedule:
+    # Random time to avoid spikes
+    - cron: '13 8 * * *'
 
 jobs:
   semgrep:
     name: Run Semgrep SAST
     runs-on: ubuntu-latest
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Run Semgrep
-      uses: returntocorp/semgrep-action@v1
-      with:
-        config: "p/terraform"
-        publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+      - name: Run Semgrep Terraform scan and publish results
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "p/terraform"
+          publishToken: $SEMGREP_APP_TOKEN
 
-    - name: Send Slack Notification
-      if: failure()
-      run: |
-        curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"🔒 Semgrep **failed** on ${{ github.repository }} PR #${{ github.event.pull_request.number || github.run_number }}."}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Send Slack Notification on failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"🔒 Semgrep **failed** on `${{ github.repository }}` PR #${{ github.event.pull_request.number || github.run_number }}."}' \
+            $SLACK_WEBHOOK_URL
