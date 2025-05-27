@@ -220,7 +220,3 @@ terraform destroy
 ## 👤 Author
 
 Eng. Kheir el dine Baarini
-
-> 🔐 **Note on Credentials**:  
-> All AWS credentials (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`) must be securely generated manually by the user through the [AWS IAM Console](https://console.aws.amazon.com/iam/).  
-> These are **not included** in this repository and should be safely stored as GitHub Secrets or environment variables for GitLab/Jenkins use. Never hardcode secrets into code or version control.
