@@ -3,7 +3,7 @@
 
 This project deploys [Ghost CMS](https://ghost.org/) on AWS using **Terraform** (under `infra/`) and sets up a **CI/CD pipeline** with GitHub Actions, GitLab CI, and Jenkins. It also includes **Semgrep** for Terraform SAST scanning with **Slack notifications**.
 
-The code architecture and documentation created by Eng. Kheir el dine Baaarini with mentioning the credits for some **Specific Resources Mentioned Below** 
+The code architecture and documentation created by **Eng. Kheir el dine Baaarini** with mentioning the credits for some **Specific Resources Mentioned Below** 
 
 The Credentials used in this code for deployement are limited for a specific user with **specific permissions**
 
