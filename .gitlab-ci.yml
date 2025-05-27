@@ -1,0 +1,28 @@
+stages:
+  - validate
+  - semgrep
+  - plan
+
+validate_terraform:
+  stage: validate
+  image: hashicorp/terraform:light
+  script:
+    - cd infra
+    - terraform init
+    - terraform validate
+    - terraform fmt -check
+
+semgrep_scan:
+  stage: semgrep
+  image: returntocorp/semgrep
+  script:
+    - semgrep scan --config p/terraform
+  allow_failure: true
+
+terraform_plan:
+  stage: plan
+  image: hashicorp/terraform:light
+  script:
+    - cd infra
+    - terraform init
+    - terraform plan

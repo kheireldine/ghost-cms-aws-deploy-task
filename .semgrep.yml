@@ -1,0 +1,6 @@
+rules:
+  - id: aws-instance-public-ip
+    patterns:
+      - pattern: aws_instance
+        message: "Avoid exposing public IPs unless necessary."
+        severity: WARNING

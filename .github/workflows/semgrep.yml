@@ -1,0 +1,23 @@
+name: Semgrep SAST
+
+on: [push, pull_request]
+
+jobs:
+  semgrep:
+    name: Run Semgrep SAST
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: "p/terraform"
+        publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+    - name: Send Slack Notification
+      if: failure()
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"🔒 Semgrep **failed** on ${{ github.repository }} PR #${{ github.event.pull_request.number || github.run_number }}."}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
